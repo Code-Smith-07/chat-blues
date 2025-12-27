@@ -4121,6 +4121,13 @@ export default function App() {
         const newSavedModels = savedModels.filter(m => m !== modelToDelete);
         setSavedModels(newSavedModels);
         localStorage.setItem('savedModels', JSON.stringify(newSavedModels));
+        
+        // If the deleted model was the current model, switch to another saved model or default
+        if (localModel === modelToDelete) {
+            const newModel = newSavedModels.length > 0 ? newSavedModels[0] : 'llama3.2:3b';
+            setLocalModel(newModel);
+            localStorage.setItem('localModel', newModel);
+        }
     };
 
     // Load history on mount
