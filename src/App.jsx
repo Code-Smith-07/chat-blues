@@ -3536,9 +3536,9 @@ const AiMessage = ({ content, darkMode, onPreview, onSetupGuide, isEditResponse,
 
 const ErrorMessage = ({ content }) => (
      <div className="flex flex-col items-start">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center mb-2 font-bold text-sm border border-white/20">!</div>
-        <div className="bg-red-600/20 rounded-3xl p-3 max-w-[85%] backdrop-blur-sm border border-red-500/30">
-            <p className="text-sm text-red-200 whitespace-pre-wrap break-words">{content}</p>
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center mb-2 font-bold text-sm text-white border border-white/20">!</div>
+        <div className="bg-red-100 rounded-3xl p-3 max-w-[85%] backdrop-blur-sm border border-red-300">
+            <p className="text-sm text-red-800 font-medium whitespace-pre-wrap break-words">{content}</p>
         </div>
     </div>
 );
