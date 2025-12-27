@@ -199,6 +199,72 @@ const SettingsIcon = () => (
     </svg>
 );
 
+// SVG Icons for Local AI models (used in model selection)
+const ModelIcons = {
+    // Default box/cube icon for local models
+    cube: (color) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+    ),
+    // Server icon
+    server: (color) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+        </svg>
+    ),
+    // CPU/Chip icon
+    cpu: (color) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
+        </svg>
+    ),
+    // Llama icon
+    llama: (color) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 3v2"></path>
+            <path d="M16 3v2"></path>
+            <path d="M12 3v2"></path>
+            <path d="M4 7h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"></path>
+            <circle cx="8" cy="12" r="1"></circle>
+            <circle cx="16" cy="12" r="1"></circle>
+            <path d="M8 18v3"></path>
+            <path d="M16 18v3"></path>
+        </svg>
+    ),
+    // Sparkles icon (for Qwen, etc)
+    sparkles: (color) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+            <path d="M5 3v4"></path>
+            <path d="M19 17v4"></path>
+            <path d="M3 5h4"></path>
+            <path d="M17 19h4"></path>
+        </svg>
+    ),
+    // Brain icon
+    brain: (color) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path>
+            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path>
+        </svg>
+    )
+};
+
 const OVIcoSVG = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className={className}>
         <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontWeight="bold" fontSize="12" fontFamily="Inter, sans-serif">OV</text>
@@ -4016,10 +4082,23 @@ export default function App() {
     const [temperature, setTemperature] = useState(0.7);
     const [contextWindow, setContextWindow] = useState(8192);
     const [attachedFile, setAttachedFile] = useState(null); // { name, type, content, preview }
+    const [showQuickModelPicker, setShowQuickModelPicker] = useState(false);
+    const quickModelPickerRef = useRef(null);
     const inputRef = useRef(null);
     const recognitionRef = useRef(null);
 
     const chatContainerRef = useRef(null);
+
+    // Close quick model picker when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (quickModelPickerRef.current && !quickModelPickerRef.current.contains(event.target)) {
+                setShowQuickModelPicker(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Save configuration function
     const saveLocalConfig = () => {
@@ -4991,16 +5070,113 @@ These guidelines ensure the code works perfectly in the live preview system with
                                     </svg>
                                 </button>
                             )}
-                            <div>
-                                <h1 className={`text-base sm:text-lg md:text-xl font-bold ${darkMode ? 'bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent' : 'text-gray-800'}`}>
-                                    Chat Blues
-                                </h1>
+                            <div className="relative" ref={quickModelPickerRef}>
+                                <div className="flex items-center gap-1">
+                                    <h1 className={`text-base sm:text-lg md:text-xl font-bold ${darkMode ? 'bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent' : 'text-gray-800'}`}>
+                                        Chat Blues
+                                    </h1>
+                                    <button 
+                                        onClick={() => setShowQuickModelPicker(!showQuickModelPicker)}
+                                        className={`p-1 rounded-full transition-all duration-200 ${showQuickModelPicker ? (darkMode ? 'bg-gray-700 text-green-400' : 'bg-green-100 text-green-600') : (darkMode ? 'text-gray-500 hover:text-gray-300 hover:bg-gray-700/50' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100')}`}
+                                        title="Quick Model Switch"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    </button>
+                                </div>
                                 <div className="flex items-center gap-2">
                                     <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                         {localModel.split('/').pop().split(':')[0]}
                                     </div>
                                     <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${darkMode ? 'bg-green-500/20 text-green-400' : 'bg-green-100 text-green-600'}`}>LOCAL</span>
                                 </div>
+                                
+                                {/* Quick Model Picker Dropdown */}
+                                {showQuickModelPicker && (
+                                    <div className={`absolute top-full left-0 mt-2 w-72 max-h-80 overflow-hidden rounded-xl shadow-2xl border z-50 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                                        <div className={`sticky top-0 px-3 py-2 border-b flex items-center gap-2 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={darkMode ? 'text-green-400' : 'text-green-600'}>
+                                                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                                                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                                                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                                                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                                            </svg>
+                                            <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Local Models (Ollama)</p>
+                                        </div>
+                                        <div className="max-h-64 overflow-y-auto p-1">
+                                            {savedModels.length > 0 ? (
+                                                savedModels.map((model, index) => (
+                                                    <button
+                                                        key={index}
+                                                        onClick={() => {
+                                                            setLocalModel(model);
+                                                            localStorage.setItem('localModel', model);
+                                                            setShowQuickModelPicker(false);
+                                                        }}
+                                                        className={`w-full px-3 py-2 rounded-lg flex items-center gap-3 transition-all duration-150 ${localModel === model
+                                                            ? (darkMode ? 'bg-green-600/20 border border-green-500/30' : 'bg-green-50 border border-green-200') 
+                                                            : (darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-50')}`}
+                                                    >
+                                                        <span className="flex-shrink-0">
+                                                            {ModelIcons.cube(localModel === model ? '#22c55e' : (darkMode ? '#9ca3af' : '#6b7280'))}
+                                                        </span>
+                                                        <div className="flex-1 text-left min-w-0">
+                                                            <div className={`text-sm font-medium truncate ${localModel === model ? (darkMode ? 'text-green-400' : 'text-green-600') : (darkMode ? 'text-white' : 'text-gray-900')}`}>
+                                                                {model.split('/').pop().split(':')[0]}
+                                                            </div>
+                                                            <div className={`text-xs truncate ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                                {model}
+                                                            </div>
+                                                        </div>
+                                                        {localModel === model && (
+                                                            <svg className={`flex-shrink-0 ${darkMode ? 'text-green-400' : 'text-green-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                                            </svg>
+                                                        )}
+                                                    </button>
+                                                ))
+                                            ) : (
+                                                <div className={`px-3 py-6 text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                    <svg className="mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                        <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                                                        <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                                                        <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                                                        <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                                                    </svg>
+                                                    <p className="text-xs">No local models saved</p>
+                                                    <p className="text-xs mt-1">Add models in Settings</p>
+                                                </div>
+                                            )}
+                                            
+                                            {/* Current model if not in saved list */}
+                                            {localModel && !savedModels.includes(localModel) && (
+                                                <div className={`mt-1 pt-1 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                                                    <button
+                                                        onClick={() => setShowQuickModelPicker(false)}
+                                                        className={`w-full px-3 py-2 rounded-lg flex items-center gap-3 transition-all duration-150 ${darkMode ? 'bg-green-600/20 border border-green-500/30' : 'bg-green-50 border border-green-200'}`}
+                                                    >
+                                                        <span className="flex-shrink-0">
+                                                            {ModelIcons.cube('#22c55e')}
+                                                        </span>
+                                                        <div className="flex-1 text-left min-w-0">
+                                                            <div className={`text-sm font-medium truncate ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
+                                                                {localModel.split('/').pop().split(':')[0]}
+                                                            </div>
+                                                            <div className={`text-xs truncate ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                                Current • {localModel}
+                                                            </div>
+                                                        </div>
+                                                        <svg className={`flex-shrink-0 ${darkMode ? 'text-green-400' : 'text-green-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="flex items-center gap-1 sm:gap-2">
