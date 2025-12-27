@@ -272,7 +272,6 @@ chat-blues/
 ├── src/
 │   ├── App.jsx          # Main application
 │   ├── Sidebar.jsx      # Navigation sidebar
-│   ├── VideoCall.jsx    # Video call feature
 │   ├── main.jsx         # Entry point
 │   └── index.css        # Global styles
 ├── public/

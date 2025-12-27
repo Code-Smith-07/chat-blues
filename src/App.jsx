@@ -5,7 +5,6 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Editor from '@monaco-editor/react';
 import { transform } from '@babel/standalone';
-import VideoCall from './VideoCall.jsx';
 import Sidebar from './Sidebar.jsx';
 
 // Capacitor imports for mobile functionality
