@@ -3640,6 +3640,8 @@ const SettingsContent = ({
     setLocalEndpoint,
     localModel,
     setLocalModel,
+    savedModels,
+    onDeleteModel,
     hapticFeedback,
     setHapticFeedback,
     randomSeed,
@@ -3717,11 +3719,68 @@ const SettingsContent = ({
                                 : 'bg-blue-500 hover:bg-blue-600 text-white'
                         }`}
                     >
-                        Save Configuration
+                        Save & Add Model to List
                     </button>
                 </div>
             </div>
         </div>
+
+        {/* Saved Models List */}
+        {savedModels.length > 0 && (
+            <div>
+                <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Saved Models</h3>
+                <div className={`rounded-xl border ${darkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-gray-50'}`}>
+                    <div className="max-h-48 overflow-y-auto">
+                        {savedModels.map((model, index) => (
+                            <div 
+                                key={index}
+                                className={`flex items-center justify-between p-3 cursor-pointer transition-colors ${
+                                    index !== savedModels.length - 1 ? (darkMode ? 'border-b border-gray-700' : 'border-b border-gray-200') : ''
+                                } ${localModel === model 
+                                    ? darkMode ? 'bg-blue-600/20' : 'bg-blue-50' 
+                                    : darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-100'
+                                }`}
+                                onClick={() => setLocalModel(model)}
+                            >
+                                <div className="flex items-center gap-3 flex-1">
+                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                        localModel === model 
+                                            ? 'border-blue-500 bg-blue-500' 
+                                            : darkMode ? 'border-gray-500' : 'border-gray-400'
+                                    }`}>
+                                        {localModel === model && (
+                                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                                        )}
+                                    </div>
+                                    <span className={`text-sm font-medium truncate ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                        {model}
+                                    </span>
+                                </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDeleteModel(model);
+                                    }}
+                                    className={`p-1.5 rounded-lg transition-colors ${
+                                        darkMode 
+                                            ? 'text-gray-400 hover:text-red-400 hover:bg-red-500/10' 
+                                            : 'text-gray-500 hover:text-red-500 hover:bg-red-50'
+                                    }`}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <p className={`text-xs mt-2 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                    Click to select a model. Click the trash icon to remove.
+                </p>
+            </div>
+        )}
 
         {/* Chat Settings */}
         <div>
@@ -3948,6 +4007,10 @@ export default function App() {
         const saved = localStorage.getItem('localModel');
         return saved || 'llama3.2:3b';
     });
+    const [savedModels, setSavedModels] = useState(() => {
+        const saved = localStorage.getItem('savedModels');
+        return saved ? JSON.parse(saved) : [];
+    });
     const [hapticFeedback, setHapticFeedback] = useState(true);
     const [randomSeed, setRandomSeed] = useState(true);
     const [temperature, setTemperature] = useState(0.7);
@@ -3962,8 +4025,23 @@ export default function App() {
     const saveLocalConfig = () => {
         localStorage.setItem('localEndpoint', localEndpoint);
         localStorage.setItem('localModel', localModel);
-        // Show a brief success indication (the modal will close anyway)
-        alert('Configuration saved successfully!');
+        
+        // Add model to saved list if unique and not empty
+        if (localModel.trim() && !savedModels.includes(localModel.trim())) {
+            const newSavedModels = [...savedModels, localModel.trim()];
+            setSavedModels(newSavedModels);
+            localStorage.setItem('savedModels', JSON.stringify(newSavedModels));
+            alert('Configuration saved! Model added to your list.');
+        } else {
+            alert('Configuration saved!');
+        }
+    };
+
+    // Delete model from saved list
+    const deleteModel = (modelToDelete) => {
+        const newSavedModels = savedModels.filter(m => m !== modelToDelete);
+        setSavedModels(newSavedModels);
+        localStorage.setItem('savedModels', JSON.stringify(newSavedModels));
     };
 
     // Load history on mount
@@ -4285,6 +4363,8 @@ export default function App() {
                     setLocalEndpoint={setLocalEndpoint}
                     localModel={localModel}
                     setLocalModel={setLocalModel}
+                    savedModels={savedModels}
+                    onDeleteModel={deleteModel}
                     hapticFeedback={hapticFeedback}
                     setHapticFeedback={setHapticFeedback}
                     randomSeed={randomSeed}
