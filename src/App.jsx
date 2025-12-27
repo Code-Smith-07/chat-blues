@@ -4657,12 +4657,41 @@ Keep everything else the same from the original image, only change what was spec
         const baseUrl = localEndpoint.replace(/\/$/, '');
         const API_URL = `${baseUrl}/api/chat`;
         
+        // Check if model supports vision (LLaVA, bakllava, llava-llama3, etc.)
+        const isVisionModel = localModel.toLowerCase().includes('llava') || 
+                              localModel.toLowerCase().includes('vision') ||
+                              localModel.toLowerCase().includes('bakllava');
+        
+        // Transform messages for Ollama format, handling images if present
+        const transformedMessages = messageHistory.map(msg => {
+            // Check if this message has image data and model supports vision
+            if (msg.imageDataForApi && isVisionModel) {
+                // Extract base64 data from data URL (remove "data:image/xxx;base64," prefix)
+                const base64Data = msg.imageDataForApi.includes('base64,') 
+                    ? msg.imageDataForApi.split('base64,')[1] 
+                    : msg.imageDataForApi;
+                
+                // Ollama multimodal format
+                return {
+                    role: msg.role,
+                    content: msg.content || "Please analyze this image.",
+                    images: [base64Data]
+                };
+            }
+            // Regular text message
+            return {
+                role: msg.role,
+                content: msg.content
+            };
+        });
+        
         console.log('Making Local API request with:', {
             url: API_URL,
             model: localModel,
-            messageCount: messageHistory.length,
+            messageCount: transformedMessages.length,
             temperature,
-            contextWindow
+            contextWindow,
+            isVisionModel
         });
         
         try {
@@ -4673,7 +4702,7 @@ Keep everything else the same from the original image, only change what was spec
                 },
                 body: JSON.stringify({
                     "model": localModel,
-                    "messages": messageHistory,
+                    "messages": transformedMessages,
                     "stream": false,
                     "options": {
                         "temperature": temperature,
@@ -4782,11 +4811,12 @@ Keep everything else the same from the original image, only change what was spec
             }
         }
 
-        // Message for display in the UI
+        // Message for display in the UI (also stores imageDataForApi for future API calls)
         const newUserMessage = { 
             role: 'user', 
             content: userMessageDisplay,
-            attachment: attachedFile ? { name: attachedFile.name, type: attachedFile.type, preview: attachedFile.preview } : null
+            attachment: attachedFile ? { name: attachedFile.name, type: attachedFile.type, preview: attachedFile.preview } : null,
+            imageDataForApi: imageDataForApi // Store for future API calls with context
         };
         
         // Message for API - contains actual content and image data
@@ -4939,7 +4969,7 @@ These guidelines ensure the code works perfectly in the live preview system with
                 // Build API messages: filter out initial greeting, convert existing messages to API format, add new API message
                 const previousApiMessages = messages
                     .filter(msg => msg.role !== 'assistant' || msg.content !== 'Hello! I am Chat Blues. How can I assist you today?')
-                    .map(msg => ({ role: msg.role, content: msg.content }));
+                    .map(msg => ({ role: msg.role, content: msg.content, imageDataForApi: msg.imageDataForApi }));
                 
                 apiMessages = [systemMessage, ...previousApiMessages, apiUserMessage];
             }
