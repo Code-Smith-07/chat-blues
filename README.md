@@ -27,6 +27,8 @@ In an age where AI services collect and store your conversations, **Chat Blues**
 - **💰 Free Forever** - No API costs, no subscriptions
 - **🌐 Works Offline** - No internet required after setup
 
+> 🌐 **Want an online version?** Visit [chatblues.com](https://chatblues.com) for the hosted version with cloud AI models!
+
 ---
 
 ## ✨ Features
@@ -355,7 +357,7 @@ You may choose either license for your use.
 
 ## 📬 Contact
 
-**Vishwateja** - [@code-smith-07](https://github.com/code-smith-07)
+**Vishwateja S B** - [@Code-Smith-07](https://github.com/Code-Smith-07)
 
 Project Link: [https://github.com/code-smith-07/chat-blues](https://github.com/code-smith-07/chat-blues)
 

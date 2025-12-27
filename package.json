@@ -4,7 +4,7 @@
   "description": "A 100% private, offline AI chat application powered by local LLMs via Ollama. No data leaves your device.",
   "type": "module",
   "license": "MIT",
-  "author": "Vishwateja (code-smith-07)",
+  "author": "Vishwateja S B (code-smith-07)",
   "repository": {
     "type": "git",
     "url": "https://github.com/code-smith-07/chat-blues.git"
