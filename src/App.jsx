@@ -3640,7 +3640,6 @@ const SettingsContent = ({
     setLocalEndpoint,
     localModel,
     setLocalModel,
-    popularModels,
     hapticFeedback,
     setHapticFeedback,
     randomSeed,
@@ -3649,7 +3648,8 @@ const SettingsContent = ({
     setTemperature,
     contextWindow,
     setContextWindow,
-    onReset
+    onReset,
+    onSaveConfig
 }) => (
     <div className="space-y-6">
         {/* Privacy Notice */}
@@ -3709,60 +3709,17 @@ const SettingsContent = ({
                             Enter exact model name as shown by <code className="px-1 py-0.5 rounded bg-gray-700/50">ollama list</code>
                         </p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        {/* Popular Models */}
-        <div>
-            <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Popular Models</h3>
-            <p className={`text-sm mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Click to select. Run <code className={`px-1.5 py-0.5 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>ollama pull model-name</code> to download.
-            </p>
-            <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
-                {popularModels.map(model => (
-                    <div 
-                        key={model.id}
-                        onClick={() => setLocalModel(model.id)}
-                        className={`p-3 rounded-xl border cursor-pointer transition-all duration-200 hover:scale-[1.01] ${
-                            localModel === model.id 
-                                ? darkMode 
-                                    ? 'bg-blue-600/20 border-blue-500/50 shadow-lg' 
-                                    : 'bg-blue-50 border-blue-300 shadow-lg'
-                                : darkMode 
-                                    ? 'bg-gray-700/30 border-gray-600/30 hover:bg-gray-600/40' 
-                                    : 'bg-gray-50/50 border-gray-200/50 hover:bg-gray-100/70'
+                    <button
+                        onClick={onSaveConfig}
+                        className={`w-full py-2.5 px-4 rounded-lg font-medium transition-all duration-200 ${
+                            darkMode 
+                                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                                : 'bg-blue-500 hover:bg-blue-600 text-white'
                         }`}
                     >
-                        <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                    <span className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                        {model.name}
-                                    </span>
-                                    {model.type === 'vision' && (
-                                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${darkMode ? 'bg-cyan-600/20 text-cyan-400' : 'bg-cyan-100 text-cyan-600'}`}>
-                                            VISION
-                                        </span>
-                                    )}
-                                </div>
-                                <div className={`text-xs mt-0.5 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    {model.description}
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className={`text-xs px-2 py-1 rounded-full ${darkMode ? 'bg-gray-600/50 text-gray-300' : 'bg-gray-200 text-gray-600'}`}>
-                                    {model.size}
-                                </span>
-                                {localModel === model.id && (
-                                    <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
-                                        <div className="w-2 h-2 rounded-full bg-white"></div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                ))}
+                        Save Configuration
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -3968,7 +3925,10 @@ export default function App() {
     ]);
     const [userInput, setUserInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
+    const [darkMode, setDarkMode] = useState(() => {
+        const savedDarkMode = localStorage.getItem('darkMode');
+        return savedDarkMode ? JSON.parse(savedDarkMode) : false;
+    });
     const [modal, setModal] = useState({ isOpen: false, type: null });
     const [livePreview, setLivePreview] = useState({ isOpen: false, code: '', language: '', originalCode: '', isSetupGuide: false, additionalCSS: '', isCombined: false });
     const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
@@ -3980,8 +3940,14 @@ export default function App() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(typeof window !== 'undefined' ? window.innerWidth >= 1024 : true);
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChatId, setCurrentChatId] = useState(null);
-    const [localEndpoint, setLocalEndpoint] = useState('http://localhost:11434');
-    const [localModel, setLocalModel] = useState('llama3.2:3b');
+    const [localEndpoint, setLocalEndpoint] = useState(() => {
+        const saved = localStorage.getItem('localEndpoint');
+        return saved || 'http://localhost:11434';
+    });
+    const [localModel, setLocalModel] = useState(() => {
+        const saved = localStorage.getItem('localModel');
+        return saved || 'llama3.2:3b';
+    });
     const [hapticFeedback, setHapticFeedback] = useState(true);
     const [randomSeed, setRandomSeed] = useState(true);
     const [temperature, setTemperature] = useState(0.7);
@@ -3990,81 +3956,15 @@ export default function App() {
     const inputRef = useRef(null);
     const recognitionRef = useRef(null);
 
-    // Popular local AI models for Ollama (all free and open source)
-    const popularModels = [
-        {
-            id: 'llama3.2:3b',
-            name: 'Llama 3.2 3B',
-            description: 'Fast & efficient • Good for everyday tasks',
-            size: '2.0 GB',
-            type: 'text'
-        },
-        {
-            id: 'llama3.2:1b',
-            name: 'Llama 3.2 1B',
-            description: 'Ultra-fast • Great for quick responses',
-            size: '1.3 GB',
-            type: 'text'
-        },
-        {
-            id: 'llama3.1:8b',
-            name: 'Llama 3.1 8B',
-            description: 'Balanced • Great quality and speed',
-            size: '4.7 GB',
-            type: 'text'
-        },
-        {
-            id: 'mistral:7b',
-            name: 'Mistral 7B',
-            description: 'High quality • Excellent for coding',
-            size: '4.1 GB',
-            type: 'text'
-        },
-        {
-            id: 'phi3:mini',
-            name: 'Phi-3 Mini',
-            description: 'Microsoft • Fast & capable',
-            size: '2.3 GB',
-            type: 'text'
-        },
-        {
-            id: 'gemma2:2b',
-            name: 'Gemma 2 2B',
-            description: 'Google • Lightweight & efficient',
-            size: '1.6 GB',
-            type: 'text'
-        },
-        {
-            id: 'qwen2.5:3b',
-            name: 'Qwen 2.5 3B',
-            description: 'Alibaba • Multi-language support',
-            size: '1.9 GB',
-            type: 'text'
-        },
-        {
-            id: 'deepseek-coder:6.7b',
-            name: 'DeepSeek Coder 6.7B',
-            description: 'Specialized • Best for programming',
-            size: '3.8 GB',
-            type: 'text'
-        },
-        {
-            id: 'llava:7b',
-            name: 'LLaVA 7B (Vision)',
-            description: 'Multimodal • Can see images',
-            size: '4.5 GB',
-            type: 'vision'
-        },
-        {
-            id: 'codellama:7b',
-            name: 'Code Llama 7B',
-            description: 'Meta • Optimized for code',
-            size: '3.8 GB',
-            type: 'text'
-        }
-    ];
-
     const chatContainerRef = useRef(null);
+
+    // Save configuration function
+    const saveLocalConfig = () => {
+        localStorage.setItem('localEndpoint', localEndpoint);
+        localStorage.setItem('localModel', localModel);
+        // Show a brief success indication (the modal will close anyway)
+        alert('Configuration saved successfully!');
+    };
 
     // Load history on mount
     useEffect(() => {
@@ -4385,7 +4285,6 @@ export default function App() {
                     setLocalEndpoint={setLocalEndpoint}
                     localModel={localModel}
                     setLocalModel={setLocalModel}
-                    popularModels={popularModels}
                     hapticFeedback={hapticFeedback}
                     setHapticFeedback={setHapticFeedback}
                     randomSeed={randomSeed}
@@ -4398,6 +4297,7 @@ export default function App() {
                         resetSettings();
                         closeModal();
                     }}
+                    onSaveConfig={saveLocalConfig}
                 /> 
             };
             case 'activity': return { 
@@ -5025,7 +4925,11 @@ These guidelines ensure the code works perfectly in the live preview system with
                         </div>
                         <div className="flex items-center gap-1 sm:gap-2">
                              <button onClick={() => openModal('info')} className={`text-xs sm:text-sm font-semibold transition-colors ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}>Open Source</button>
-                            <button onClick={() => setDarkMode(!darkMode)} className={`p-2 rounded-full transition-all duration-300 ${darkMode ? 'text-gray-400 hover:text-white hover:bg-gray-700/50' : 'text-gray-600 hover:text-gray-900 hover:bg-white/20'}`}>
+                            <button onClick={() => {
+                                const newMode = !darkMode;
+                                setDarkMode(newMode);
+                                localStorage.setItem('darkMode', JSON.stringify(newMode));
+                            }} className={`p-2 rounded-full transition-all duration-300 ${darkMode ? 'text-gray-400 hover:text-white hover:bg-gray-700/50' : 'text-gray-600 hover:text-gray-900 hover:bg-white/20'}`}>
                                 {darkMode ? <SunIcon /> : <MoonIcon />}
                             </button>
                         </div>
