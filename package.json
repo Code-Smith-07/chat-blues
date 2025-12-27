@@ -1,0 +1,60 @@
+{
+  "name": "chat-blues",
+  "version": "1.0.0",
+  "description": "A 100% private, offline AI chat application powered by local LLMs via Ollama. No data leaves your device.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Vishwateja (code-smith-07)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/code-smith-07/chat-blues.git"
+  },
+  "keywords": [
+    "ai",
+    "chat",
+    "ollama",
+    "local-llm",
+    "privacy",
+    "offline",
+    "react",
+    "open-source"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@babel/standalone": "^7.28.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/clipboard": "^7.0.2",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/device": "^7.0.2",
+    "@capacitor/haptics": "^7.0.2",
+    "@capacitor/ios": "^7.4.3",
+    "@capacitor/keyboard": "^7.0.3",
+    "@capacitor/network": "^7.0.2",
+    "@capacitor/status-bar": "^7.0.3",
+    "@monaco-editor/react": "^4.7.0",
+    "lucide-react": "^0.542.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.1",
+    "react-syntax-highlighter": "^15.6.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "vite": "^7.1.2"
+  }
+}

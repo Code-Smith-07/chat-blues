@@ -1,0 +1,80 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+build/
+*.local
+
+# Environment variables (never commit these!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Test coverage
+coverage/
+*.lcov
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Capacitor
+ios/App/Pods/
+ios/App/DerivedData/
+android/.gradle/
+android/app/build/
+android/build/
+*.keystore
+!debug.keystore
+
+# Misc
+*.pem
+.cache/
+.parcel-cache/
+
+# Firebase (don't commit these)
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebaserc
+
+# Optional
+# Uncomment if you don't want to track lockfile
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml

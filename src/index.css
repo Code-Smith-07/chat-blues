@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom button sizes for mobile/tablet optimization */
+@media (min-width: 768px) {
+  .md\:w-13 {
+    width: 3.25rem; /* 52px */
+  }
+  .md\:h-13 {
+    height: 3.25rem; /* 52px */
+  }
+}
+
+/* Enhanced mobile spacing */
+@media (max-width: 640px) {
+  .mobile-form-spacing {
+    padding: 0 0.75rem;
+  }
+}
