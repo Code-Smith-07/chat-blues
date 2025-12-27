@@ -275,7 +275,9 @@ chat-blues/
 │   ├── main.jsx         # Entry point
 │   └── index.css        # Global styles
 ├── public/
-│   └── index.html       # HTML template
+│   ├── favicon.png      # App icon
+│   ├── favicon.svg      # SVG icon
+│   └── site.webmanifest # PWA manifest
 ├── package.json         # Dependencies
 ├── vite.config.js       # Vite configuration
 ├── tailwind.config.js   # Tailwind configuration
