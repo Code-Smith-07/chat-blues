@@ -4669,20 +4669,22 @@ Keep everything else the same from the original image, only change what was spec
         // Check if any message has image data
         const hasImageData = messageHistory.some(msg => msg.imageDataForApi);
         
-        // Transform messages for Ollama format, handling images if present
-        // We try sending images to ANY model - if it doesn't support vision, Ollama will return an error
+        // Transform messages for Ollama format, handling images/documents if present
+        // We try sending files to ANY model - if it doesn't support them, Ollama will return an error
         const transformedMessages = messageHistory.map(msg => {
-            // If this message has image data, always try to send it (let model decide if supported)
+            // If this message has image/document data, always try to send it (let model decide if supported)
             if (msg.imageDataForApi) {
-                // Extract base64 data from data URL (remove "data:image/xxx;base64," prefix)
+                // Extract base64 data from data URL (remove "data:xxx;base64," prefix)
                 const base64Data = msg.imageDataForApi.includes('base64,') 
                     ? msg.imageDataForApi.split('base64,')[1] 
                     : msg.imageDataForApi;
                 
-                // Ollama multimodal format
+                const isPdf = msg.fileType === 'pdf';
+                
+                // Ollama multimodal format (works for images, PDFs may need model support)
                 return {
                     role: msg.role,
-                    content: msg.content || "Please analyze this image.",
+                    content: msg.content || (isPdf ? "Please analyze this PDF document." : "Please analyze this image."),
                     images: [base64Data]
                 };
             }
@@ -4783,36 +4785,27 @@ Keep everything else the same from the original image, only change what was spec
         // Add haptic feedback
         triggerHapticFeedback();
 
-        // Check if current model supports vision (LLaVA, etc.)
-        const isVisionModel = localModel.toLowerCase().includes('llava') || localModel.toLowerCase().includes('vision');
-
         // Build message content with file if attached
         let messageContent = trimmedInput;
         let userMessageDisplay = trimmedInput;
-        let imageDataForApi = null; // Store image data for vision API
+        let imageDataForApi = null; // Store image/document data for multimodal API
+        let fileType = null; // Track file type for API
         
         if (attachedFile) {
             if (attachedFile.type.startsWith('image/')) {
-                // For images
+                // For images - send to ALL models, let API decide if supported
                 userMessageDisplay = trimmedInput || `[Uploaded image: ${attachedFile.name}]`;
-                
-                if (isVisionModel && attachedFile.content) {
-                    // For vision models, we'll send the image data properly
-                    messageContent = trimmedInput || `Please analyze this image.`;
-                    imageDataForApi = attachedFile.content; // base64 image data
-                } else {
-                    // For non-vision models, just mention the image
-                    messageContent = trimmedInput 
-                        ? `${trimmedInput}\n\n[User has attached an image: ${attachedFile.name}. Note: This model cannot see images. Please select a Vision model like "Google Gemini 2.0 Flash (Vision)" to analyze images.]`
-                        : `[User has attached an image: ${attachedFile.name}. Note: This model cannot see images. Please select a Vision model like "Google Gemini 2.0 Flash (Vision)" to analyze images.]`;
-                }
+                messageContent = trimmedInput || `Please analyze this image.`;
+                imageDataForApi = attachedFile.content; // base64 image data
+                fileType = 'image';
             } else if (attachedFile.type === 'application/pdf') {
+                // For PDFs - send as multimodal data (many models can read PDFs)
                 userMessageDisplay = trimmedInput || `[Uploaded PDF: ${attachedFile.name}]`;
-                messageContent = trimmedInput 
-                    ? `${trimmedInput}\n\n[User has attached a PDF file: ${attachedFile.name}. Note: I cannot read PDF contents directly, but I can help with questions about it if you describe its contents.]`
-                    : `I've uploaded a PDF file: ${attachedFile.name}. Please note that you may need to tell me what's in it so I can help you with it.`;
+                messageContent = trimmedInput || `Please analyze this PDF document.`;
+                imageDataForApi = attachedFile.content; // base64 PDF data
+                fileType = 'pdf';
             } else {
-                // For text files, include the content
+                // For text files, include the content directly
                 userMessageDisplay = trimmedInput || `[Uploaded file: ${attachedFile.name}]`;
                 messageContent = trimmedInput 
                     ? `${trimmedInput}\n\n--- File: ${attachedFile.name} ---\n${attachedFile.content}\n--- End of file ---`
@@ -4825,14 +4818,16 @@ Keep everything else the same from the original image, only change what was spec
             role: 'user', 
             content: userMessageDisplay,
             attachment: attachedFile ? { name: attachedFile.name, type: attachedFile.type, preview: attachedFile.preview } : null,
-            imageDataForApi: imageDataForApi // Store for future API calls with context
+            imageDataForApi: imageDataForApi, // Store for future API calls with context
+            fileType: fileType // Track if it's image, pdf, or null
         };
         
-        // Message for API - contains actual content and image data
+        // Message for API - contains actual content and image/document data
         const apiUserMessage = {
             role: 'user',
             content: messageContent,
-            imageDataForApi: imageDataForApi // Will be used by vision models
+            imageDataForApi: imageDataForApi, // Will be used by multimodal models
+            fileType: fileType // Track file type for proper API formatting
         };
         
         const newMessages = [...messages, newUserMessage];
