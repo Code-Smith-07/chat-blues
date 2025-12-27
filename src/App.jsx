@@ -4657,15 +4657,23 @@ Keep everything else the same from the original image, only change what was spec
         const baseUrl = localEndpoint.replace(/\/$/, '');
         const API_URL = `${baseUrl}/api/chat`;
         
-        // Check if model supports vision (LLaVA, bakllava, llava-llama3, etc.)
-        const isVisionModel = localModel.toLowerCase().includes('llava') || 
+        // Check if model is known to support vision (for logging purposes)
+        // We still TRY to send images to any model - let the API decide
+        const knownVisionModel = localModel.toLowerCase().includes('llava') || 
                               localModel.toLowerCase().includes('vision') ||
-                              localModel.toLowerCase().includes('bakllava');
+                              localModel.toLowerCase().includes('bakllava') ||
+                              localModel.toLowerCase().includes('moondream') ||
+                              localModel.toLowerCase().includes('cogvlm') ||
+                              localModel.toLowerCase().includes('minicpm');
+        
+        // Check if any message has image data
+        const hasImageData = messageHistory.some(msg => msg.imageDataForApi);
         
         // Transform messages for Ollama format, handling images if present
+        // We try sending images to ANY model - if it doesn't support vision, Ollama will return an error
         const transformedMessages = messageHistory.map(msg => {
-            // Check if this message has image data and model supports vision
-            if (msg.imageDataForApi && isVisionModel) {
+            // If this message has image data, always try to send it (let model decide if supported)
+            if (msg.imageDataForApi) {
                 // Extract base64 data from data URL (remove "data:image/xxx;base64," prefix)
                 const base64Data = msg.imageDataForApi.includes('base64,') 
                     ? msg.imageDataForApi.split('base64,')[1] 
@@ -4691,7 +4699,8 @@ Keep everything else the same from the original image, only change what was spec
             messageCount: transformedMessages.length,
             temperature,
             contextWindow,
-            isVisionModel
+            hasImageData,
+            knownVisionModel
         });
         
         try {
