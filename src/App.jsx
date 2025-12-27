@@ -4975,7 +4975,19 @@ These guidelines ensure the code works perfectly in the live preview system with
                         />
                     )}
 
-
+                    {/* Desktop Menu Button - Fixed on left side when sidebar closed */}
+                    {!isSidebarOpen && (
+                        <button 
+                            onClick={() => setIsSidebarOpen(true)}
+                            className={`hidden lg:flex fixed left-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${darkMode ? 'bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700' : 'bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </button>
+                    )}
 
                     <div className={`${isCanvasMode ? 'h-[100dvh] flex' : 'h-[100dvh] relative flex items-center justify-center'} ${isSidebarOpen ? 'lg:ml-72' : ''} transition-all duration-300 py-10 px-4 sm:p-6 md:p-8 pb-16 sm:pb-12 md:pb-16 font-['Inter',_sans-serif] overflow-hidden ${mainBgClass}`}>
                 <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -4986,11 +4998,11 @@ These guidelines ensure the code works perfectly in the live preview system with
                 <div className={`relative z-10 ${isCanvasMode ? 'hidden lg:flex lg:w-1/3 h-full m-4' : 'w-full max-w-sm sm:max-w-4xl md:max-w-5xl h-full'} flex flex-col rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-xl transition-all duration-500 ${darkMode ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/60 border-white/40'}`}>
                     <header className={`p-3 sm:p-4 border-b flex justify-between items-center flex-shrink-0 transition-colors duration-500 ${isCanvasMode ? 'rounded-t-2xl' : ''} ${darkMode ? 'border-gray-700/50' : 'border-white/20'}`}>
                         <div className="flex-1 flex items-center gap-2 sm:gap-3">
-                            {/* Menu Button - visible on all screens when sidebar closed */}
+                            {/* Menu Button - visible only on mobile when sidebar closed */}
                             {!isSidebarOpen && (
                                 <button 
                                     onClick={() => setIsSidebarOpen(true)}
-                                    className={`p-2 -ml-1 rounded-full transition-colors ${darkMode ? 'text-gray-400 hover:text-white hover:bg-gray-700/50' : 'text-gray-600 hover:text-gray-900 hover:bg-black/10'}`}
+                                    className={`lg:hidden p-2 -ml-1 rounded-full transition-colors ${darkMode ? 'text-gray-400 hover:text-white hover:bg-gray-700/50' : 'text-gray-600 hover:text-gray-900 hover:bg-black/10'}`}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                         <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -5307,7 +5319,6 @@ These guidelines ensure the code works perfectly in the live preview system with
             {modal.isOpen && <Modal title={getModalContent().title} content={getModalContent().content} onClose={closeModal} darkMode={darkMode} />}
                 </>
             } />
-            <Route path="/videocall" element={<VideoCall />} />
         </Routes>
     );
 }
